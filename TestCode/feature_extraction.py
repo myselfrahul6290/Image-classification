@@ -4,19 +4,7 @@
 # !pip install keras-vggface==0.6
 # !pip install keras_applications==1.0.8
 
-# import os
-# import pickle
-#
-# actors = os.listdir('data')
-#
-# filenames = []
-#
-# for actor in actors:
-#     for file in os.listdir(os.path.join('data',actor)):
-#         filenames.append(os.path.join('data',actor,file))
-#
-# # print(filenames)
-# pickle.dump(filenames,open('filenames.pkl','wb'))
+
 
 from tensorflow.keras.preprocessing import image
 from keras_vggface.utils import preprocess_input
