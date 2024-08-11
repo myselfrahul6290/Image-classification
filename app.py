@@ -44,15 +44,15 @@ def extract_features(img_path,model,detector):
     result = model.predict(preprocessed_img).flatten()
     return result
 
-def recommend(feature_list,features):
+def recommend(feature_list,features,ind):
     similarity = []
     for i in range(len(feature_list)):
         similarity.append(cosine_similarity(features.reshape(1, -1), feature_list[i].reshape(1, -1))[0][0])
 
-    index_pos = sorted(list(enumerate(similarity)), reverse=True, key=lambda x: x[1])[0][0]
+    index_pos = sorted(list(enumerate(similarity)), reverse=True, key=lambda x: x[1])[ind][0]
     return index_pos
 
-st.title('Celeb Image Classification?')
+st.title('Find Your Images..')
 
 uploaded_image = st.file_uploader('Choose an image')
 
@@ -62,20 +62,32 @@ if uploaded_image is not None:
         # load the image
         display_image = Image.open(uploaded_image)
         #create col
-        col1, col2 = st.columns(2)
+        col1 = st.columns(1)[0]
         with col1:
             st.header('Your uploaded image')
-            st.image(display_image)
+            st.image(display_image,width=150)
 
         # extract the features
         features = extract_features(os.path.join('uploads',uploaded_image.name),model,detector)
         # recommend
-        index_pos = recommend(feature_list,features)
+        index_pos = recommend(feature_list,features,0)
+        # print("INDEX pos",index_pos)
         predicted_actor = " ".join(filenames[index_pos].split('\\')[1].split('_'))
+
+        index_pos1 = recommend(feature_list, features, 1)
+        # print("INDEX pos",index_pos)
+        predicted_actor1 = " ".join(filenames[index_pos1].split('\\')[1].split('_'))
+        st.header("Look Like...")
+        col2, col3=st.columns(2)
+
         # Recommend Image display
 
         with col2:
-            st.header("Look like " + predicted_actor)
+            # st.header("Look like " + predicted_actor)
             st.image(filenames[index_pos],width=300)
+
+        with col3:
+            # st.header("Look like " + predicted_actor)
+            st.image(filenames[index_pos1],width=300)
 
 # Run command-> streamlit run app.py
